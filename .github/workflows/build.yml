@@ -114,7 +114,7 @@ jobs:
 #           path: coverage-e2e/*
   sonarcloud:
     name: SonarCloud
-    needs: [build, unit-test, e2e-testing]
+    needs: [build, unit-test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
