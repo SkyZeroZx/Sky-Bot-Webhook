@@ -1,7 +1,7 @@
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
-import { FB_EVENT, FB_SOURCE } from '@common/constants/config';
+import { DEFAULT_RESPONSE, FB_EVENT, FB_SOURCE } from '@common/constants/config';
 import { structProtoToJson, isDefined } from '@common/helpers';
 import {
   IDialogflowMessage,
@@ -28,13 +28,13 @@ export class WebhookService {
 
   async receivedMessage(messagingEvent: Messaging) {
     const senderId = messagingEvent.sender.id;
-    const recipientID = messagingEvent.recipient.id;
+    const recipientId = messagingEvent.recipient.id;
     const timeOfMessage = messagingEvent.timestamp;
     const message = messagingEvent.message;
     this.logger.log({
       message: 'Received message for user and page at with message:',
       senderId,
-      recipientID,
+      recipientId,
       timeOfMessage,
     });
 
@@ -49,12 +49,10 @@ export class WebhookService {
       let responseDialogflow: google.cloud.dialogflow.v2.IQueryResult;
       let listAttachments: string[] = [];
 
-      await this.sessionsService.setSessionAndUser(senderId);
-      const session = await this.sessionsService.getSession(senderId);
-      this.logger.log({ message: 'SessionsService', session });
+      const session = await this.sessionsService.setSessionAndUser(senderId);
+
       if (text) {
         this.logger.log({ message: 'message text', text });
-
         responseDialogflow = await this.dialogflowService.sendToDialogFlow({
           message: text,
           session: session,
@@ -64,9 +62,7 @@ export class WebhookService {
 
       if (attachments) {
         listAttachments = attachments.map((attachment) => attachment.payload.url);
-
         this.logger.log({ message: 'message attachments', listAttachments });
-
         responseDialogflow = await this.dialogflowService.sendToDialogFlow({
           session: session,
           source: FB_SOURCE,
@@ -75,7 +71,6 @@ export class WebhookService {
       }
 
       this.logger.log({ message: 'Response from dialogflow', responseDialogflow });
-
       const response = await this.documentaryProcedureService.isDocumentaryProcedure({
         responseDialogflow,
         attachments: listAttachments,
@@ -83,12 +78,10 @@ export class WebhookService {
       });
 
       this.logger.log({ message: 'response from documentary procedure', response });
-
       await this.handleDialogFlowResponse(senderId, response);
     } catch (error) {
-      console.error(error);
-      this.logger.error('salio mal en sendToDialogflow...');
-      this.logger.error(error);
+      this.logger.error({ message: 'salio mal en sendToDialogflow', error });
+      throw new Error('WebHook: sendToDialogflow ERROR');
     }
   }
 
@@ -123,21 +116,22 @@ export class WebhookService {
     });
 
     if (isDefined(messages)) {
-      await this.handleMessages(messages, senderId, this.sendMessageAPI.bind(this));
-    } else if (responseText == '' && !isDefined(action)) {
+      return await this.handleMessages(messages, senderId, this.sendMessageAPI.bind(this));
+    }
+
+    if (responseText == '' && !isDefined(action)) {
       //dialogflow could not evaluate input.
-      const notEvaluateInput = this.sendTextMessage(
-        senderId,
-        'No entiendo lo que trataste de decir ...',
-      );
-      await this.sendMessageAPI(notEvaluateInput);
-    } else if (isDefined(responseText)) {
+      const notEvaluateInput = this.sendTextMessage(senderId, DEFAULT_RESPONSE);
+      return await this.sendMessageAPI(notEvaluateInput);
+    }
+
+    if (isDefined(responseText)) {
       const formatedText = this.sendTextMessage(senderId, responseText);
-      await this.sendMessageAPI(formatedText);
+      return await this.sendMessageAPI(formatedText);
     }
   }
 
-  async handleMessages(messages: IDialogflowMessage[], sender: string, sendMessage: Function) {
+  async handleMessages(messages: IDialogflowMessage[], senderId: string, sendMessage: Function) {
     try {
       let tempCards: IDialogflowMessage[] = [];
       let listCards: FacebookSendMessageCards[] = [];
@@ -146,14 +140,14 @@ export class WebhookService {
         switch (message.message) {
           case 'card':
             tempCards.push(message);
-            listCards.push(this.handleCardMessages(tempCards, sender));
+            listCards.push(this.handleCardMessages(tempCards, senderId));
             tempCards = [];
             break;
           case 'text':
           case 'image':
           case 'quickReplies':
           case 'payload':
-            await sendMessage(this.handleMessage(message, sender));
+            await sendMessage(this.handleMessage(message, senderId));
             break;
           default:
             throw new Error('No recognized type messageData');
@@ -164,8 +158,7 @@ export class WebhookService {
         await sendMessage(card);
       }
     } catch (error: any) {
-      this.logger.error('Error handleMessages');
-      this.logger.error(error.message);
+      this.logger.error({ message: 'Error handleMessages', error: error.message });
       throw new Error('Error handleMessages');
     }
   }
@@ -199,7 +192,7 @@ export class WebhookService {
         },
       );
 
-      let element = {
+      const element = {
         title: message.card.title,
         image_url: message.card.imageUri,
         subtitle: message.card.subtitle,
@@ -207,10 +200,10 @@ export class WebhookService {
       };
       elements.push(element);
     });
-    return this.sendGenericMessage(senderId, elements);
+    return this.sendGenericMessage(elements, senderId);
   }
 
-  sendGenericMessage(senderId: string, elements: FacebookCardElement[]): FacebookSendMessageCards {
+  sendGenericMessage(elements: FacebookCardElement[], senderId: string): FacebookSendMessageCards {
     const messageData = {
       recipient: {
         id: senderId,
@@ -230,33 +223,37 @@ export class WebhookService {
 
   handleMessage(message: IDialogflowMessage, senderId: string) {
     this.logger.log({ message: 'handleMessage', senderId: senderId, dialogflowMessage: message });
-    switch (message.message) {
-      case 'text':
-        const formatedMessageText = this.sendTextMessage(senderId, message.text.text[0]);
-        return formatedMessageText;
-      case 'payload':
-        const desestructPayload = structProtoToJson(message.payload);
-        const messageData = {
-          recipient: {
-            id: senderId,
-          },
-          message: desestructPayload.facebook,
-        };
-        this.logger.log({
-          message: 'desestructPayloadFacebook',
-          desestructPayloadFacebook: desestructPayload.facebook,
-        });
-        return messageData;
-      default:
-        this.logger.error({ message: 'Unknown message received', error: message });
-        throw new Error('Unknown message received');
+    const typeMessage = message.message;
+
+    if (typeMessage === 'text') {
+      const formatedMessageText = this.sendTextMessage(senderId, message.text.text[0]);
+      return formatedMessageText;
     }
+
+    if (typeMessage === 'payload') {
+      const desestructPayload = structProtoToJson(message.payload);
+      const messageData = {
+        recipient: {
+          id: senderId,
+        },
+        message: desestructPayload.facebook,
+      };
+      this.logger.log({
+        message: 'desestructPayloadFacebook',
+        desestructPayloadFacebook: desestructPayload.facebook,
+      });
+      return messageData;
+    }
+
+    throw new Error('Unknown message received');
   }
 
   async sendMessageAPI(messageData: any) {
     this.logger.log({ message: 'sendMessageAPI to Facebook', messageData });
     try {
-      return await this.httpService.axiosRef.post('/me/messages', messageData);
+      const { data } = await this.httpService.axiosRef.post('/me/messages', messageData);
+      this.logger.log({ message: 'Facebok Response', data });
+      return;
     } catch (error: any) {
       this.logger.error({ message: 'Error message from Facebook', error: error.message });
       throw new Error('Error send message from Facebook');

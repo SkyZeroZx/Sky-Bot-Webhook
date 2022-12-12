@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Sky Krono API"', () => {
-      expect(appController.getName()).toBe('Sky Krono API');
+    it('should return "Sky Bot Webhook"', () => {
+      expect(appController.getName()).toBe('Sky Bot Webhook');
     });
   });
 });

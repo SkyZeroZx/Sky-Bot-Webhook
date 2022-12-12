@@ -7,7 +7,12 @@ import { AttachmentService } from '@common/services/attachment/attachment.servic
 import { DocumentService } from '@common/services/document/document.service';
 import { StatusDocumentService } from '@common/services/status-document/status-document.service';
 import { StudentService } from '@common/services/student/student.service';
- 
+import {
+  DEFAULT_REGISTER_OBSERVATION,
+  DEFAULT_REGISTER_STATUS,
+  DEFAULT_REPONSE_ERROR,
+} from '@common/constants/config';
+
 @Injectable()
 export class DocumentaryProcedureService {
   private readonly logger = new Logger(DocumentaryProcedureService.name);
@@ -34,12 +39,6 @@ export class DocumentaryProcedureService {
     if (Util.isDocumentaryProcedureIntent(intentName) && isDefined(responseText)) {
       return documentaryProcedure.responseDialogflow;
     }
-
-    // validate if responseText of dialogflow exist
-    // if (isDefined(responseText)) {
-    //   console.log('Como response text esta definido retorno')
-    //   return documentaryProcedure.responseDialogflow;
-    // }
 
     // Detect Workflow for documentary procedure by steps
     switch (intentName) {
@@ -76,7 +75,7 @@ export class DocumentaryProcedureService {
       };
     } catch (error) {
       this.logger.error({ message: 'Error getStatusDocumentaryProcedure', error: error });
-      return { fulfillmentText: 'Sucedio un error al buscar el estado de su tramite' };
+      return { fulfillmentText: DEFAULT_REPONSE_ERROR };
     }
   }
 
@@ -94,7 +93,7 @@ export class DocumentaryProcedureService {
       };
     } catch (error) {
       this.logger.error({ message: 'Error documtaryProcedureStep1', error: error });
-      return { fulfillmentText: 'Sucedio un error al buscar el tramite solicitado' };
+      return { fulfillmentText: DEFAULT_REPONSE_ERROR };
     }
   }
 
@@ -112,7 +111,7 @@ export class DocumentaryProcedureService {
       };
     } catch (error) {
       this.logger.error({ message: 'Error documtaryProcedureStep2', error: error });
-      return { fulfillmentText: 'Sucedio un error al buscar su codigo de estudiante' };
+      return { fulfillmentText: DEFAULT_REPONSE_ERROR };
     }
   }
 
@@ -133,7 +132,7 @@ export class DocumentaryProcedureService {
       };
     } catch (error) {
       this.logger.error({ message: 'Error documtaryProcedureStep3', error: error });
-      return { fulfillmentText: 'Sucedio un error al buscar su codigo de estudiante' };
+      return { fulfillmentText: DEFAULT_REPONSE_ERROR };
     }
   }
 
@@ -170,8 +169,8 @@ export class DocumentaryProcedureService {
 
       await this.statusDocumentService.registerStatus({
         idStatusDocument,
-        status: 'Register by awesome basilisco',
-        observations: 'Its working',
+        status: DEFAULT_REGISTER_STATUS,
+        observations: DEFAULT_REGISTER_OBSERVATION,
       });
 
       return {
@@ -179,7 +178,7 @@ export class DocumentaryProcedureService {
       };
     } catch (error) {
       this.logger.error({ message: 'Error documtaryProcedureStep4', error: error });
-      return { fulfillmentText: 'Sucedio un error buscar su DNI' };
+      return { fulfillmentText: DEFAULT_REPONSE_ERROR };
     }
   }
 
@@ -210,7 +209,7 @@ export class DocumentaryProcedureService {
       };
     } catch (error) {
       this.logger.error({ message: 'Error documtaryProcedureStep5', error: error });
-      return { fulfillmentText: 'Sucedio un error al registrar sus adjuntos' };
+      return { fulfillmentText: DEFAULT_REPONSE_ERROR };
     }
   }
 }

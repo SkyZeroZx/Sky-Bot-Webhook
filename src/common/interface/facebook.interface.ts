@@ -33,11 +33,11 @@ export interface Sender {
 }
 
 export interface Messaging {
-  message: Message;
+  message?: Message;
   recipient: Recipient;
   sender: Sender;
   timestamp: number;
-  postback: Postback;
+  postback?: Postback;
 }
 
 export interface Entry {

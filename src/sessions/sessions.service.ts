@@ -5,16 +5,15 @@ import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { REDIS_CACHE_DURATION } from '@common/constants/config';
 
-//const sessionIds = new Map();
 @Injectable()
 export class SessionsService {
   private readonly logger = new Logger(SessionsService.name);
-  private readonly REDIS_CACHE_DURATION: number;
+  private readonly REDIS_CACHE_DURATION: string;
   constructor(
-    @InjectRedis() private readonly redis: Redis,
+    @InjectRedis('default') private readonly redis: Redis,
     private readonly configService: ConfigService,
   ) {
-    this.REDIS_CACHE_DURATION = this.configService.get<number>(REDIS_CACHE_DURATION);
+    this.REDIS_CACHE_DURATION = this.configService.get<string>(REDIS_CACHE_DURATION);
   }
 
   async setSession(sessionId: string, sessionUser: string) {
@@ -25,29 +24,16 @@ export class SessionsService {
     return await this.redis.get(sessionId);
   }
 
-  async setSessionAndUser(senderId: string) {
+  async setSessionAndUser(sessionId: string) {
     try {
-      if (!(await this.getSession(senderId))) {
-        await this.setSession(senderId, uuidv4());
+      const session = await this.getSession(sessionId);
+      if (!session) {
+        await this.setSession(sessionId, uuidv4());
       }
+      return await this.getSession(sessionId);
     } catch (error) {
-      this.logger.error('Sucedio un error en register session');
-      this.logger.error(error);
-      throw error;
+      this.logger.error({ message: 'Sucedio un error en register session', error });
+      throw new Error('Sucedio un error en setSessionAndUser');
     }
   }
-
-  // async setSessionAndUser(senderId) {
-  //   try {
-  //     if (!sessionIds.has(senderId)) {
-  //       sessionIds.set(senderId, uuidv4());
-  //     }
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
-
-  // async getSession(sessionId: string) {
-  //   return sessionIds.get(sessionId);
-  // }
 }

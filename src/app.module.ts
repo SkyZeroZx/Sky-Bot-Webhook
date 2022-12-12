@@ -2,7 +2,6 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { ScheduleModule as ScheduleModuleNestJs } from '@nestjs/schedule';
 import { HealthModule } from './health/health.module';
 import {
   makeCounterProvider,
@@ -26,7 +25,6 @@ import { StudentModule } from '@common/services/student/student.module';
       envFilePath: '.env',
     }),
     PrometheusModule.register(),
-    ScheduleModuleNestJs.forRoot(),
     HealthModule,
     WebhookModule,
     DialogflowModule,

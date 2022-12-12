@@ -16,8 +16,8 @@ export class AttachmentService {
       );
       return data;
     } catch (error: any) {
-      this.logger.error(error.message);
-      throw new Error('Upload Error');
+      this.logger.error({ message: 'Error uploading attachment', error: error.message });
+      throw new Error('Attachment Upload Error');
     }
   }
 }

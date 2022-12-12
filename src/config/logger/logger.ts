@@ -52,7 +52,7 @@ const logstashTransport =
           node_name: process.env.LOGSTASH_NODE_NAME,
           host: process.env.LOGSTASH_HOST,
           onError(_err) {
-            console.error('error logtash', _err);
+            console.error('error logstash', _err);
           },
           max_connect_retries: 0,
         }),
