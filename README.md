@@ -34,8 +34,14 @@ NodeJS >= 14.X
 NPM >= 8.X
 NestJS >= 9.X
 DialogFlow
-API Facebook MetaDevelopers >= 11.X
 Redis
+```
+_Servicios requeridos_
+
+```
+Dialogflow 
+API Facebook MetaDevelopers
+Auth0
 ```
 
 _Software opcional_
