@@ -1,5 +1,5 @@
 import { Controller, Get, Body, Req, Logger, Post } from '@nestjs/common';
-import { FacebookEntry, Messaging } from '@common/interface';
+import { FacebookEntry, Messaging } from '@core/interface';
 import { WebhookService } from './webhook.service';
 
 @Controller('webhook')

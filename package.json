@@ -36,7 +36,9 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "9.2.1",
     "@nestjs/terminus": "^9.1.4",
+    "@types/auth0": "^2.35.8",
     "@willsoto/nestjs-prometheus": "^4.7.0",
+    "auth0": "^3.0.1",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
@@ -97,7 +99,7 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "^@common(.*)$": "<rootDir>/common/$1"
+      "^@core(.*)$": "<rootDir>/core/$1"
     },
     "testTimeout": 15000,
     "moduleFileExtensions": [
@@ -120,9 +122,10 @@
       "!**/*.module.(t|j)s",
       "!**/*.enum.(t|j)s",
       "!**/config/logger/**",
-      "!**/common/interceptor/**",
-      "!**/common/interface/**",
-      "!**common/helpers/**",
+      "!**/core/interceptor/**",
+      "!**/core/interface/**",
+      "!**core/helpers/**",
+      "!**core/metrics/**",
       "!**main.(t|j)s"
     ],
     "coverageDirectory": "../coverage",

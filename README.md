@@ -97,7 +97,7 @@ _Para ejecutar todos los E2E Test y reporte de cobertura de codigo ejecutar el c
  npm run test:e2e:cov
 ```
 
-![E2E Test Coverage](/docs/e2e-test/e2e-test-coverage.png)
+<!-- ![E2E Test Coverage](/docs/e2e-test/e2e-test-coverage.png) -->
 
 ### Build
 
@@ -120,7 +120,7 @@ _Para construir la imagen y ejecutarla tenemos el siguiente comando , el cual ta
 _Ejecutar el siguiente comando en la raiz del proyecto_
 
 ```
- docker compose  -f docker-compose.prod.yaml --env-file .env up -d --build skykronoapi nginx
+ docker compose  -f docker-compose.prod.yaml --env-file .env up -d --build skybotwebhook nginx
 ```
 
 ![Docker 1](/docs/docker/docker-1.png)
@@ -137,9 +137,9 @@ _Se configuro por default el puerto **9090** para Prometheus y para Grafana se c
 
 _DashBoard para monitoreo del API en Grafana_
 
-![Grafana 1](/docs/graphana/graphana-1.png)
+![Grafana 1](/docs/grafana/grafana-1.png)
 
-![Grafana 2](/docs/graphana/graphana-2.png)
+![Grafana 2](/docs/grafana/grafana-2.png)
 
 _Se agrego tambien LogStash , ElasticSearch con Kibana para la ingesta y monitoreo de LOGs_
 
@@ -168,15 +168,15 @@ LOGSTASH_NODE_NAME= SKY_BOT_WEBHOOK_LOG
 LOGSTASH_HOST= host.docker.internal
 GRAFANA_PASSWORD='changeme'
 ELASTIC_VERSION=8.5.0
-KIBANA_SYSTEM_PASSWORD= changeme
-LOGSTASH_INTERNAL_PASSWORD= changeme
+KIBANA_SYSTEM_PASSWORD= 'changeme'
+LOGSTASH_INTERNAL_PASSWORD= 'changeme'
 ELASTIC_PASSWORD= changeme
 ```
 
 _Si desea importar los dashboards construidos para este proyecto se encuentran en la carpeta ```dashboard``` siendo los archivos:_
 
-- ***grafana-sky-krono.json*** para **Grafana**
-- ***kibana-sky-krono.ndjson*** para **Kibana**
+- ***grafana-sky-bot-webhook.json*** para **Grafana**
+- ***kibana-sky-bot-webhook.ndjson*** para **Kibana**
 
 ## Analisis de Codigo 🔩
 
@@ -200,7 +200,7 @@ npm run sonar
 
 _Reporte de Cobertura en SonarCloud_
 
-![SonarQube Cloud 1](/docs/sonar/sonar-cloud.png)
+![SonarQube Cloud 1](/docs/sonar/sonar-cloud-1.png)
 
 ![SonarQube Cloud 2](/docs/sonar/sonar-cloud-2.png)
 
@@ -212,11 +212,11 @@ _Se realizo un CI con SonarCloud para ejecuta de manera automatica los test_
 
 _Se creo la carpeta `.github/workflows` con el archivo `build.yml` que contiene los pasos para desplegar mediante GitHub Actions nuestro CI_
 
-![CI 1](/docs/ci/ci-1.png)
+<!-- ![CI 1](/docs/ci/ci-1.png) -->
 
 _Posteriormente a la ejecución del workflow se generan los artifacts `reports-e2e-test` , `reports-unit-test` que contienen el reporte cobertura generado_
 
-![CI 2](/docs/ci/ci-2.png)
+<!-- ![CI 2](/docs/ci/ci-2.png) -->
 
 
 ## Logger
@@ -250,6 +250,7 @@ _Las herramientas utilizadas son:_
 - [Nginx](https://www.nginx.com/) - Servidor de Proxy Inverso ligero
 - [Graphana](https://grafana.com/) - Para la creación de DashBoard interactivos
 - [Prometheus](https://prometheus.io/) - Aplicación para monitorear metricas en tiempo real
+- [Redis](https://redis.io/) - Almacén de estructura de datos en memoria de código abierto , que se utiliza como base de datos, caché.
 - [Kibana](https://www.elastic.co/es/kibana) - Permite visualizar los datos de Elasticsearch y navegar en el Elastic Stack
 - [Logstash](https://www.elastic.co/es/logstash/) - Procesador de datos gratuito e ingesta de logs
 - [ElasticSearch](https://www.elastic.co/es/what-is/elasticsearch) - Motor de búsqueda y analítica distribuido, gratuito y abierto
@@ -260,6 +261,7 @@ _Las herramientas utilizadas son:_
 - [MetaDevelopers](https://developers.facebook.com/) - Plataforma para integración y uso de API Facebook Oficial
 - [DialogFlow](https://dialogflow.cloud.google.com) -Plataforma de comprensión del lenguaje natural que se utiliza para diseñar e integrar una interfaz de usuario conversacional
 - [TabNine](https://www.tabnine.com/) - Autocompletador de Codigo
+- [Auth0](https://auth0.com/docs) -Servicio para autentificación y autorización fiable y flexible
 - [Winston](https://github.com/winstonjs/winston) - Logger para NodeJS
 
 ## Versionado 📌

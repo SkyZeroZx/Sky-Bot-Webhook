@@ -1,17 +1,19 @@
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import { Injectable, Logger } from '@nestjs/common';
-import { isDefined } from '@common/helpers';
-import { DocumentaryProcedure } from '@common/interface';
-import { Util } from '@common/utils/utils';
-import { AttachmentService } from '@common/services/attachment/attachment.service';
-import { DocumentService } from '@common/services/document/document.service';
-import { StatusDocumentService } from '@common/services/status-document/status-document.service';
-import { StudentService } from '@common/services/student/student.service';
+import { isDefined } from '@core/helpers';
+import { DocumentaryProcedure } from '@core/interface';
+import { isDocumentaryProcedureIntent } from '@core/utils';
 import {
   DEFAULT_REGISTER_OBSERVATION,
   DEFAULT_REGISTER_STATUS,
   DEFAULT_REPONSE_ERROR,
-} from '@common/constants/config';
+} from '@core/constants';
+import {
+  AttachmentService,
+  DocumentService,
+  StatusDocumentService,
+  StudentService,
+} from '@core/services';
 
 @Injectable()
 export class DocumentaryProcedureService {
@@ -31,12 +33,12 @@ export class DocumentaryProcedureService {
     this.logger.log({ message: 'documentaryProcedure ', documentaryProcedure });
 
     // Validate in case is documentary procedure
-    if (!Util.isDocumentaryProcedureIntent(intentName)) {
+    if (!isDocumentaryProcedureIntent(intentName)) {
       return documentaryProcedure.responseDialogflow;
     }
 
     // Return reponse in case is required variables of dialogflow for documentary procedure
-    if (Util.isDocumentaryProcedureIntent(intentName) && isDefined(responseText)) {
+    if (isDocumentaryProcedureIntent(intentName) && isDefined(responseText)) {
       return documentaryProcedure.responseDialogflow;
     }
 

@@ -1,4 +1,4 @@
-import { DocumentaryProcedure } from '@common/interface';
+import { DocumentaryProcedure } from '@core/interface';
 
 export class DocumentaryProcedureServiceMock {
   public static readonly notMatchDocumentaryProcedure: DocumentaryProcedure = {

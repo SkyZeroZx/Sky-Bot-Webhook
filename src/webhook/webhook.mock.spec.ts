@@ -1,4 +1,4 @@
-import { FacebookEntry, Messaging } from '@common/interface';
+import { FacebookEntry, Messaging } from '@core/interface';
 
 export class WebhookServiceMock {
   public receivedMessage = jest.fn().mockReturnThis();

@@ -1,8 +1,8 @@
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
-import { DEFAULT_RESPONSE, FB_EVENT, FB_SOURCE } from '@common/constants/config';
-import { structProtoToJson, isDefined } from '@common/helpers';
+import { DEFAULT_RESPONSE, FB_EVENT, FB_SOURCE } from '@core/constants';
+import { structProtoToJson, isDefined } from '@core/helpers';
 import {
   IDialogflowMessage,
   FacebookButtonElement,
@@ -11,10 +11,10 @@ import {
   FacebookSendMessageText,
   Message,
   Messaging,
-} from '@common/interface';
+} from '@core/interface';
 import { DialogflowService } from '../dialogflow/dialogflow.service';
 import { DocumentaryProcedureService } from '../documentary-procedure/documentary-procedure.service';
-import { SessionsService } from '../sessions/sessions.service';
+import { SessionsService } from '@core/config';
 
 @Injectable()
 export class WebhookService {

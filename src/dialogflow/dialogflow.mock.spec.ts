@@ -1,5 +1,5 @@
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
-import { IDialogflowMessage, DialogFlowMessage } from '@common/interface';
+import { IDialogflowMessage, DialogFlowMessage } from '@core/interface';
 
 export class DialogflowServiceMock {
   public static readonly defaultWelcomeIntent: google.cloud.dialogflow.v2.IQueryResult = {

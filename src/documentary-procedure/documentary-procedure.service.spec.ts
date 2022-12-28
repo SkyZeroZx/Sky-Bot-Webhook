@@ -1,17 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DocumentService } from '@common/services/document/document.service';
 import { DocumentaryProcedureService } from './documentary-procedure.service';
-import { AttachmentService } from '@common/services/attachment/attachment.service';
-import { StatusDocumentService } from '@common/services/status-document/status-document.service';
-import { StudentService } from '@common/services/student/student.service';
 import { DocumentaryProcedureServiceMock } from './documentary-procedure.mock.spec';
 import {
-  DEFAULT_REGISTER_OBSERVATION,
-  DEFAULT_REGISTER_STATUS,
+  AttachmentService,
+  DocumentService,
+  StatusDocumentService,
+  StudentService,
+} from '@core/services';
+import {
   DEFAULT_REPONSE_ERROR,
-} from '@common/constants/config';
-import { DocumentServiceMock } from '@common/services/document/document.mock.spec';
-import { StudentServiceMock } from '../common/services/student/student.mock.spec';
+  DEFAULT_REGISTER_STATUS,
+  DEFAULT_REGISTER_OBSERVATION,
+} from '@core/constants';
+import { DocumentServiceMock } from '@core/services/document/document.mock.spec';
+import { StudentServiceMock } from '@core/services/student/student.mock.spec';
 
 describe('DocumentaryProcedureService', () => {
   let documentaryProcedureService: DocumentaryProcedureService;
