@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cors from 'cors';
 import helmet from 'helmet';
-import { loggerConfig } from './config/logger/logger';
+import { loggerConfig } from '@core/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, loggerConfig);
@@ -12,6 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      transform: true,
     }),
   );
 

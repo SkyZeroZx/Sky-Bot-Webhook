@@ -7,8 +7,8 @@ import {
   GOOGLE_CLIENT_EMAIL,
   GOOGLE_PRIVATE_KEY,
   GOOGLE_PROJECT_ID,
-} from '@common/constants/config';
-import { DialogFlowMessage } from '@common/interface';
+} from '@core/constants/config';
+import { DialogFlowMessage } from '@core/interface';
 
 @Injectable()
 export class DialogflowService {
@@ -69,7 +69,7 @@ export class DialogflowService {
 
       const result = responses[0].queryResult;
 
-      this.logger.log(`INTENT EMPAREJADO: ${result.intent.displayName}`);
+      this.logger.log({ message: 'INTENT EMPAREJADO', intentName: result.intent.displayName });
 
       let defaultResponses = [];
 
