@@ -219,11 +219,11 @@ _Se realizo un CI con SonarCloud para ejecuta de manera automatica los test_
 
 _Se creo la carpeta `.github/workflows` con el archivo `build.yml` que contiene los pasos para desplegar mediante GitHub Actions nuestro CI_
 
-<!-- ![CI 1](/docs/ci/ci-1.png) -->
+![CI 1](/docs/ci/ci-1.png)
 
 _Posteriormente a la ejecución del workflow se generan los artifacts `reports-e2e-test` , `reports-unit-test` que contienen el reporte cobertura generado_
 
-<!-- ![CI 2](/docs/ci/ci-2.png) -->
+![CI 2](/docs/ci/ci-2.png)
 
 ## Logger
 
