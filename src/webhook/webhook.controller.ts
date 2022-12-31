@@ -13,14 +13,14 @@ export class WebhookController {
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
     const challenge = req.query.hub.challenge;
-    this.logger.log({ message: 'webhook registration', mode, token, challenge });
+    this.logger.log({ message: 'webhook registration', info: { mode, token, challenge } });
     return challenge;
   }
 
   @Post()
   async getData(@Body() { object, entry }: FacebookEntry) {
     if (object === 'page') {
-      this.logger.log({ message: 'entry for facebook recived', entry: entry });
+      this.logger.log({ message: 'entry for facebook recived', info: entry });
       const messaging: Messaging = entry[0].messaging[0];
 
       if (messaging.message) {
@@ -31,7 +31,7 @@ export class WebhookController {
         return await this.webhookService.receivedPostback(messaging);
       }
 
-      this.logger.warn({ message: 'Webhook received unknown messagingEvent:' }, messaging);
+      this.logger.warn({ message: 'Webhook received unknown messagingEvent:', info: messaging });
     }
   }
 }

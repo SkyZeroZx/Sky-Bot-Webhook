@@ -69,7 +69,7 @@ export class DialogflowServiceMock {
     },
   ];
 
-  // Is any because the type interface of dialogflow not recognized the protoValues
+  // Its any because the type interface of dialogflow not recognized the protoValues
   public static readonly payloadForFacebook: any = {
     fields: {
       facebook: {

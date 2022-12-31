@@ -7,7 +7,7 @@ import {
   GOOGLE_CLIENT_EMAIL,
   GOOGLE_PRIVATE_KEY,
   GOOGLE_PROJECT_ID,
-} from '@core/constants/config';
+} from '@core/constants';
 import { DialogFlowMessage } from '@core/interface';
 
 @Injectable()
@@ -29,10 +29,12 @@ export class DialogflowService {
   ): Promise<google.cloud.dialogflow.v2.IQueryResult> {
     const textToDialogFlow = diaglogFlowMessage.message;
     try {
+      console.log('Entre in');
       const sessionPath = this.sessionClient.projectAgentSessionPath(
         this.configService.get<string>(GOOGLE_PROJECT_ID),
         diaglogFlowMessage.session,
       );
+      console.log('Dialogflow no error ?');
 
       let request: google.cloud.dialogflow.v2.IDetectIntentRequest;
 

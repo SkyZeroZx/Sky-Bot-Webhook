@@ -2,8 +2,10 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
   <h1 align="center">Sky Bot Webhook NestJS</h1>
-  <p align="center">Es el Webhook para registro de tramites documentarios via Facebook con preguntas y respuestas mediante DialogFlow usando el API Sky Bot</p>
- 
+  <p align="center">Es el Webhook para registro de tramites documentarios via Facebook con preguntas y respuestas mediante DialogFlow usando el
+   <a href="https://github.com/SkyZeroZx/Sky-Bot-API" target="blank"> API Sky Bot</a> integrado con Auth0 para comunicación de manera segura y fiable basado en roles
+  </p>
+
 
 ## :ledger: Index
 
@@ -30,12 +32,18 @@ _Estas instrucciones te permitirán obtener una copia del proyecto en funcionami
 _Software requerido_
 
 ```
-NodeJS >= 14.X
+NodeJS >= 16.X
 NPM >= 8.X
 NestJS >= 9.X
-DialogFlow
-API Facebook MetaDevelopers >= 11.X
 Redis
+```
+
+_Servicios requeridos_
+
+```
+Dialogflow
+API Facebook Meta Developers
+Auth0
 ```
 
 _Software opcional_
@@ -61,7 +69,6 @@ _Previamente a ejecutar el servidor en desarrollo configurar el archivo .env con
 ```
 
 _Dirigirse a la ruta http://localhost:3000/ donde tendra el Webhook levantado_
-
 
 ### Environment
 
@@ -97,7 +104,7 @@ _Para ejecutar todos los E2E Test y reporte de cobertura de codigo ejecutar el c
  npm run test:e2e:cov
 ```
 
-<!-- ![E2E Test Coverage](/docs/e2e-test/e2e-test-coverage.png) -->
+![E2E Test Coverage](/docs/e2e-test/e2e-test-coverage.png)
 
 ### Build
 
@@ -173,10 +180,10 @@ LOGSTASH_INTERNAL_PASSWORD= 'changeme'
 ELASTIC_PASSWORD= changeme
 ```
 
-_Si desea importar los dashboards construidos para este proyecto se encuentran en la carpeta ```dashboard``` siendo los archivos:_
+_Si desea importar los dashboards construidos para este proyecto se encuentran en la carpeta `dashboard` siendo los archivos:_
 
-- ***grafana-sky-bot-webhook.json*** para **Grafana**
-- ***kibana-sky-bot-webhook.ndjson*** para **Kibana**
+- **_grafana-sky-bot-webhook.json_** para **Grafana**
+- **_kibana-sky-bot-webhook.ndjson_** para **Kibana**
 
 ## Analisis de Codigo 🔩
 
@@ -217,7 +224,6 @@ _Se creo la carpeta `.github/workflows` con el archivo `build.yml` que contiene 
 _Posteriormente a la ejecución del workflow se generan los artifacts `reports-e2e-test` , `reports-unit-test` que contienen el reporte cobertura generado_
 
 <!-- ![CI 2](/docs/ci/ci-2.png) -->
-
 
 ## Logger
 

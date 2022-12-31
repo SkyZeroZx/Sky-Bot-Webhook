@@ -12,10 +12,11 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
     await app.init();
   });
 
   it('/ (GET)', async () => {
-    return superTest(app.getHttpServer()).get('/').expect(200).expect('Sky Bot Webhook');
+    return superTest(app.getHttpServer()).get('/').expect(200).expect({ app: 'Sky Bot Webhook' });
   });
 });

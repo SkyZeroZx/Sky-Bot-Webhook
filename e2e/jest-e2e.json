@@ -3,9 +3,10 @@
   "modulePathIgnorePatterns": ["dist", "config"],
   "moduleNameMapper": {
     "^@/(.*)$": "<rootDir>/src/$1",
-    "^@test/(.*)$": "<rootDir>/e2e/$1"
+    "^@test/(.*)$": "<rootDir>/e2e/$1",
+    "^@core(.*)$": "<rootDir>/src/core/$1"
   },
-  "testTimeout": 15000,
+  "testTimeout": 28000,
   "rootDir": "..",
   "collectCoverageFrom": [
     "**/src/**/*.(t|j)s",
@@ -17,13 +18,16 @@
     "!**/*.swagger.(t|j)s",
     "!**/*.enum.(t|j)s",
     "!**/**.logger.(t|j)s",
-    "!**/src/common/decorators/test/**.(t|j)s",
-    "!**/src/common/decorators/test/*.(t|j)s",
-    "!**/src/common/utils/**",
-    "!**/src/health/**",
+    "!**/src/core/decorators/test/**.(t|j)s",
+    "!**/src/core/decorators/test/*.(t|j)s",
+    "!**/src/core/utils/**",
+    "!**/src/core/interface/**",
+    "!**/src/core/services/**",
+    "!**/src/core/interceptor/**",
+    "!**/src/core/health/**",
     "!**/config/**",
-    "!**/src/common/helpers/*.(t|j)s",
-    "!**/src/common/swagger/**",
+    "!**/src/core/helpers/*.(t|j)s",
+    "!**/src/core/swagger/**",
     "!**/*.(service|controller|guard|strategy|interceptor).spec.(t|j)s",
     "!**/src/**main.(t|j)s",
     "!**/src/main.(t|j)s"

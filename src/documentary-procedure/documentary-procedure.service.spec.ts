@@ -84,6 +84,17 @@ describe('DocumentaryProcedureService', () => {
     expect(dialogflowResponse).toEqual(requiredDialogflowVariables.responseDialogflow);
   });
 
+  it('isDocumentaryProcedure should return default error message if case of error', async () => {
+    const stepCurrent = DocumentaryProcedureServiceMock.generateDocumentaryProcedureSteps(1);
+    jest
+      .spyOn(documentaryProcedureService, 'documentaryProcedureStep1')
+      .mockRejectedValueOnce(new Error());
+    const { fulfillmentText } = await documentaryProcedureService.isDocumentaryProcedure(
+      stepCurrent,
+    );
+    expect(fulfillmentText).toEqual(DEFAULT_REPONSE_ERROR);
+  });
+
   it('isDocumentaryProcedure should be call step correct if variables is defined', async () => {
     for (let i = 1; i <= 5; i++) {
       const nameStepCurrent: any = `documentaryProcedureStep${i}`;
@@ -120,32 +131,6 @@ describe('DocumentaryProcedureService', () => {
     expect(fulfillmentText).toEqual(DocumentaryProcedureServiceMock.getStatusMock);
   });
 
-  it('getStatusDocumentProcedure should return default message in case of error', async () => {
-    const spyGetStatusDocument = jest
-      .spyOn(statusDocumentService, 'getStatusDocument')
-      .mockRejectedValueOnce(new Error());
-
-    const { fulfillmentText } = await documentaryProcedureService.getStatusDocumentaryProcedure(
-      dialogflowResponseWithFields,
-    );
-
-    expect(spyGetStatusDocument).toBeCalled();
-    expect(fulfillmentText).toEqual(DEFAULT_REPONSE_ERROR);
-  });
-
-  it('documentaryProcedureStep1 should return default message in case of error', async () => {
-    const spyDocument = jest
-      .spyOn(documentService, 'getDocumentByName')
-      .mockRejectedValueOnce(new Error());
-
-    const { fulfillmentText } = await documentaryProcedureService.documentaryProcedureStep1(
-      dialogflowResponseWithFields,
-    );
-
-    expect(spyDocument).toBeCalled();
-    expect(fulfillmentText).toEqual(DEFAULT_REPONSE_ERROR);
-  });
-
   it('documentaryProcedureStep1 should return correct fulfillmentText if request is correct', async () => {
     const documentaryProcedureName = fields.documentaryProcedureName.stringValue;
     const spyDocument = jest
@@ -174,32 +159,6 @@ describe('DocumentaryProcedureService', () => {
     expect(fulfillmentText).not.toEqual(DEFAULT_REPONSE_ERROR);
   });
 
-  it('documentaryProcedureStep2 should return default message in case of error', async () => {
-    const spyGetStudentById = jest
-      .spyOn(studentService, 'getStudentById')
-      .mockRejectedValueOnce(new Error());
-    const { fulfillmentText } = await documentaryProcedureService.documentaryProcedureStep2(
-      dialogflowResponseWithFields,
-    );
-    expect(spyGetStudentById).toBeCalled();
-    expect(fulfillmentText).toEqual(DEFAULT_REPONSE_ERROR);
-    expect(fulfillmentText).toBeDefined();
-  });
-
-  it('documentaryProcedureStep3 should return default message in case of error', async () => {
-    const spyGetStudentByIdAndDni = jest
-      .spyOn(studentService, 'getStudentByIdAndDni')
-      .mockRejectedValueOnce(new Error());
-
-    const { fulfillmentText } = await documentaryProcedureService.documentaryProcedureStep3(
-      dialogflowResponseWithFields,
-    );
-    expect(fulfillmentText).toBeDefined();
-    expect(fulfillmentText).toEqual(DEFAULT_REPONSE_ERROR);
-
-    expect(spyGetStudentByIdAndDni).toBeCalled();
-  });
-
   it('documentaryProcedureStep3 should return correct message in case of success', async () => {
     const spyGetStudentByIdAndDni = jest
       .spyOn(studentService, 'getStudentByIdAndDni')
@@ -212,19 +171,6 @@ describe('DocumentaryProcedureService', () => {
     expect(fulfillmentText).toBeDefined();
     expect(fulfillmentText).not.toEqual(DEFAULT_REPONSE_ERROR);
 
-    expect(spyGetStudentByIdAndDni).toBeCalled();
-  });
-
-  it('documentaryProcedureStep4 should return default message in case of error', async () => {
-    const spyGetStudentByIdAndDni = jest
-      .spyOn(studentService, 'getStudentByIdAndDni')
-      .mockRejectedValueOnce(new Error());
-    const { fulfillmentText } = await documentaryProcedureService.documentaryProcedureStep4(
-      dialogflowResponseWithFields,
-    );
-
-    expect(fulfillmentText).toBeDefined();
-    expect(fulfillmentText).toEqual(DEFAULT_REPONSE_ERROR);
     expect(spyGetStudentByIdAndDni).toBeCalled();
   });
 
@@ -260,9 +206,6 @@ describe('DocumentaryProcedureService', () => {
     const spyRegisterStatusDocument = jest
       .spyOn(statusDocumentService, 'registerStatusDocument')
       .mockResolvedValueOnce(null);
-    const spyRegisterStatus = jest
-      .spyOn(statusDocumentService, 'registerStatus')
-      .mockResolvedValueOnce(null);
 
     const { fulfillmentText } = await documentaryProcedureService.documentaryProcedureStep4(
       dialogflowResponseWithFields,
@@ -278,25 +221,6 @@ describe('DocumentaryProcedureService', () => {
       idStudent: studentCode,
       idDocument: document.idDocument,
     });
-    expect(spyRegisterStatus).toBeCalledWith({
-      idStatusDocument,
-      status: DEFAULT_REGISTER_STATUS,
-      observations: DEFAULT_REGISTER_OBSERVATION,
-    });
-  });
-
-  it('documentaryProcedureStep5  should return default message in case of error', async () => {
-    const spyGetDocumentByName = jest
-      .spyOn(documentService, 'getDocumentByName')
-      .mockRejectedValueOnce(new Error());
-
-    const { fulfillmentText } = await documentaryProcedureService.documentaryProcedureStep5(
-      dialogflowResponseWithFields,
-    );
-
-    expect(spyGetDocumentByName).toBeCalled();
-    expect(fulfillmentText).toBeDefined();
-    expect(fulfillmentText).toEqual(DEFAULT_REPONSE_ERROR);
   });
 
   it('documentaryProcedureStep5  should correct message in case of success', async () => {

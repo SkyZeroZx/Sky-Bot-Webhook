@@ -45,17 +45,6 @@ describe('StatusDocumentService', () => {
     expect(spyAxiosRefPost).toBeCalledWith('/status-document', createStatusDocumentDto);
   });
 
-  it('registerStatus should be return correct status in sucess case', async () => {
-    const spyAxiosRefPost = jest.spyOn(httpService, 'post').mockImplementationOnce((): any => {
-      return {
-        data: CommomMock.response,
-      };
-    });
-    const response = await statusDocumentService.registerStatus(createStatus);
-    expect(response).toEqual(CommomMock.response);
-    expect(spyAxiosRefPost).toBeCalledWith('/status', createStatus);
-  });
-
   it('getStatusDocument should be return correct string status in sucess case', async () => {
     const idStatusDocument = '78965412364';
     const spyAxiosRefGet = jest.spyOn(httpService, 'get').mockImplementationOnce((): any => {

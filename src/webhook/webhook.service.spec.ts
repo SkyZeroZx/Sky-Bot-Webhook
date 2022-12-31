@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DEFAULT_RESPONSE, FB_EVENT, FB_SOURCE } from '@core/constants/config';
+import { DEFAULT_RESPONSE, FB_EVENT, FB_SOURCE } from '@core/constants';
 import { DialogflowServiceMock } from '../dialogflow/dialogflow.mock.spec';
 import { DialogflowService } from '../dialogflow/dialogflow.service';
 import { DocumentaryProcedureService } from '../documentary-procedure/documentary-procedure.service';

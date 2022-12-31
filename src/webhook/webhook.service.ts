@@ -33,13 +33,11 @@ export class WebhookService {
     const message = messagingEvent.message;
     this.logger.log({
       message: 'Received message for user and page at with message:',
-      senderId,
-      recipientId,
-      timeOfMessage,
+      info: { senderId, recipientId, timeOfMessage },
     });
 
     // You may get a text or attachment but not both
-    this.logger.log({ message: 'receivedMessage ', messagingEvent });
+    this.logger.log({ message: 'receivedMessage ', info: messagingEvent });
 
     await this.sendToDialogFlow(senderId, message);
   }
@@ -62,7 +60,7 @@ export class WebhookService {
 
       if (attachments) {
         listAttachments = attachments.map((attachment) => attachment.payload.url);
-        this.logger.log({ message: 'message attachments', listAttachments });
+        this.logger.log({ message: 'message attachments', info: listAttachments });
         responseDialogflow = await this.dialogflowService.sendToDialogFlow({
           session: session,
           source: FB_SOURCE,
@@ -77,7 +75,7 @@ export class WebhookService {
         source: FB_SOURCE,
       });
 
-      this.logger.log({ message: 'response from documentary procedure', response });
+      this.logger.log({ message: 'response from documentary procedure', info: response });
       await this.handleDialogFlowResponse(senderId, response);
     } catch (error) {
       this.logger.error({ message: 'salio mal en sendToDialogflow', error });
@@ -94,7 +92,7 @@ export class WebhookService {
         text: text,
       },
     };
-    this.logger.log({ message: 'sendTextMessage', messageData });
+    this.logger.log({ message: 'sendTextMessage', info: messageData });
     return messageData;
   }
 
@@ -109,10 +107,7 @@ export class WebhookService {
     const parameters = response.parameters;
     this.logger.log({
       message: 'handleDialogFlowResponse',
-      contexts,
-      parameters,
-      action,
-      messages,
+      info: { contexts, parameters, action, messages },
     });
 
     if (isDefined(messages)) {
@@ -150,6 +145,7 @@ export class WebhookService {
             await sendMessage(this.handleMessage(message, senderId));
             break;
           default:
+            this.logger.error(`No recognized type ${message.message}`);
             throw new Error('No recognized type messageData');
         }
       }
@@ -160,6 +156,28 @@ export class WebhookService {
     } catch (error: any) {
       this.logger.error({ message: 'Error handleMessages', error: error.message });
       throw new Error('Error handleMessages');
+    }
+  }
+
+  handleMessage(message: IDialogflowMessage, senderId: string) {
+    this.logger.log({ message: 'handleMessage', info: message });
+    const typeMessage = message.message;
+
+    if (typeMessage === 'text') {
+      const formatedMessageText = this.sendTextMessage(senderId, message.text.text[0]);
+      return formatedMessageText;
+    }
+
+    if (typeMessage === 'payload') {
+      const desestructPayload = structProtoToJson(message.payload);
+      const messageData = {
+        recipient: {
+          id: senderId,
+        },
+        message: desestructPayload.facebook,
+      };
+
+      return messageData;
     }
   }
 
@@ -221,33 +239,6 @@ export class WebhookService {
     return messageData;
   }
 
-  handleMessage(message: IDialogflowMessage, senderId: string) {
-    this.logger.log({ message: 'handleMessage', senderId: senderId, dialogflowMessage: message });
-    const typeMessage = message.message;
-
-    if (typeMessage === 'text') {
-      const formatedMessageText = this.sendTextMessage(senderId, message.text.text[0]);
-      return formatedMessageText;
-    }
-
-    if (typeMessage === 'payload') {
-      const desestructPayload = structProtoToJson(message.payload);
-      const messageData = {
-        recipient: {
-          id: senderId,
-        },
-        message: desestructPayload.facebook,
-      };
-      this.logger.log({
-        message: 'desestructPayloadFacebook',
-        desestructPayloadFacebook: desestructPayload.facebook,
-      });
-      return messageData;
-    }
-
-    throw new Error('Unknown message received');
-  }
-
   async sendMessageAPI(messageData: any) {
     this.logger.log({ message: 'sendMessageAPI to Facebook', messageData });
     try {
@@ -271,10 +262,7 @@ export class WebhookService {
     };
     this.logger.log({
       message: 'Received postback for user',
-      senderId,
-      recipientID,
-      payload,
-      timeOfPostback,
+      info: { senderId, recipientID, payload, timeOfPostback },
     });
 
     await this.sendToDialogFlow(senderId, message);

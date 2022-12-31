@@ -4,7 +4,7 @@ import { WebhookController } from './webhook.controller';
 import { DialogflowModule } from '../dialogflow/dialogflow.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { FB_API_URL, FB_PAGE_TOKEN } from '@core/constants/config';
+import { FB_API_URL, FB_PAGE_TOKEN } from '@core/constants';
 import { DocumentaryProcedureModule } from '../documentary-procedure/documentary-procedure.module';
 import { SessionsModule } from '@core/config';
 

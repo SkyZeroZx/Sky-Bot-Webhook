@@ -2,9 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Response, Status } from '@core/interface';
 import { CreateStatusDocumentDto } from './dto/create-status-document.dto';
-import { CreateStatusDto } from './dto/create-status.dto';
 import { formatLocalDate } from '@core/utils';
- 
 
 @Injectable()
 export class StatusDocumentService {
@@ -15,11 +13,6 @@ export class StatusDocumentService {
       '/status-document',
       createStatusDocument,
     );
-    return data;
-  }
-
-  async registerStatus(createStatus: CreateStatusDto): Promise<Response> {
-    const { data } = await this.httpService.axiosRef.post<Response>('/status', createStatus);
     return data;
   }
 
